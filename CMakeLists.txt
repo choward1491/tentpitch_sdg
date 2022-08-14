@@ -6,4 +6,4 @@ project(tentpitch_sdg VERSION 0.1
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(tentpitch_sdg tests/misc_testing.cpp)
+add_executable(misc_tests tests/misc_testing.cpp)
