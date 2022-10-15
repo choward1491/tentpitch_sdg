@@ -1,0 +1,4 @@
+add_executable(misc_testing)
+target_sources(misc_testing PRIVATE misc_testing.cpp)
+target_include_directories(misc_testing PRIVATE ${CMAKE_CURRENT_LIST_DIR}/)
+target_link_libraries(misc_testing PRIVATE tentpitch_sdg_lib)

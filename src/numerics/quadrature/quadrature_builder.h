@@ -1,0 +1,11 @@
+/*
+** Created by Christian Howard on 10/15/22.
+*/
+#ifndef TENTPITCH_SDG_SRC_NUMERICS_QUADRATURE_QUADRATURE_BUILDER_H_
+#define TENTPITCH_SDG_SRC_NUMERICS_QUADRATURE_QUADRATURE_BUILDER_H_
+
+namespace tp_sdg::numerics::quadrature {
+int dummy_func(int a);
+}
+
+#endif //TENTPITCH_SDG_SRC_NUMERICS_QUADRATURE_QUADRATURE_BUILDER_H_
