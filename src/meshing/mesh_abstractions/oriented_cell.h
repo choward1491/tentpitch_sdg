@@ -27,8 +27,8 @@ class OrientedCell {
   absl::StatusOr<VertexHandle> GetVertex(int idx) const;
 
  private:
-  int dim;
-  std::array<VertexHandle, kMaxChamberVertices> vertices;
+  int dimension_;
+  std::array<VertexHandle, kMaxChamberVertices> vertices_;
 };
 
 };

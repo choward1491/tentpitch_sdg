@@ -6,6 +6,9 @@
 
 #include <array>
 
+#include "absl/status/status.h"
+#include "absl/status/statusor.h"
+
 #include "meshing/mesh_abstractions/chamber.fwd.h"
 #include "meshing/mesh_abstractions/constants.h"
 #include "meshing/mesh_abstractions/facet.fwd.h"
@@ -16,11 +19,17 @@ namespace tp_sdg::meshing::abstractions {
 
 class Facet : public OrientedCell {
  public:
-  Facet();
+  Facet() = default;
   ~Facet() = default;
 
+  absl::Status SetTwin(FacetHandle twin);
+  FacetHandle GetTwin() const;
+  absl::Status SetCofacet(ChamberHandle cofacet);
+  absl::StatusOr<ChamberHandle> GetCofacet() const;
+  absl::Status SetCointerstitial(ChamberHandle cointerstitial);
+  ChamberHandle GetCointerstitial() const;
+
  private:
-  int dim_;
   FacetHandle twin_;
   ChamberHandle cofacet_;
   ChamberHandle cointerstitial_;
