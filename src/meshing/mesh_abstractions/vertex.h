@@ -6,7 +6,11 @@
 
 namespace tp_sdg::meshing::abstractions {
 
-int dummy_func(int a);
+class Vertex {
+ public:
+
+ private:
+};
 
 }
 
