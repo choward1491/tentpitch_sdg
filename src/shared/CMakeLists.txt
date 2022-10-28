@@ -1,4 +1,4 @@
-add_library(shared INTERFACE)
+add_library(shared INTERFACE constants.h)
 
 add_subdirectory(utility)
 

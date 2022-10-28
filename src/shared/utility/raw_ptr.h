@@ -4,24 +4,44 @@
 #ifndef TENTPITCH_SDG_SRC_SHARED_UTILITY_RAW_PTR_H_
 #define TENTPITCH_SDG_SRC_SHARED_UTILITY_RAW_PTR_H_
 
+#include <cstddef>
+
 namespace tp_sdg::shared::util {
 
 template<typename T>
-class raw_ptr {
+class RawPtr {
  public:
-  raw_ptr(T *ptr = nullptr) : internal_ptr_(ptr) {}
-  raw_ptr(raw_ptr &r_ptr) {
+  RawPtr(T *ptr = nullptr) : internal_ptr_(ptr) {}
+  RawPtr(RawPtr &r_ptr) {
     internal_ptr_ = r_ptr.internal_ptr_;
   }
-  ~raw_ptr() = default;
-  raw_ptr &operator=(T *ptr) {
+  ~RawPtr() = default;
+  RawPtr &operator=(T *ptr) {
     internal_ptr_ = ptr;
     return *this;
   }
-  raw_ptr &operator=(const raw_ptr &r_ptr) {
+  RawPtr &operator=(const RawPtr &r_ptr) {
     internal_ptr_ = r_ptr.internal_ptr_;
     return *this;
   }
+  bool operator==(const RawPtr &r) const { return (internal_ptr_ == r.internal_ptr_); }
+  bool operator!=(const RawPtr &r) const { return (internal_ptr_ != r.internal_ptr_); }
+  bool operator!=(std::nullptr_t) const { return (internal_ptr_ != nullptr); }
+  bool operator==(std::nullptr_t) const { return (internal_ptr_ == nullptr); }
+  T *operator->() {
+    return internal_ptr_;
+  }
+  const T *operator->() const {
+    return internal_ptr_;
+  }
+  T &operator*() {
+    return *internal_ptr_;
+  }
+  const T &operator*() const {
+    return *internal_ptr_;
+  }
+  operator T *() { return internal_ptr_; }
+  operator T *() const { return internal_ptr_; }
 
   bool IsNull() const { return internal_ptr_ == nullptr; }
   bool IsNotNull() const { return !IsNull(); }
@@ -29,8 +49,6 @@ class raw_ptr {
  private:
   T *internal_ptr_;
 };
-
-int dummy_func(int a);
 
 } // end namespace
 
