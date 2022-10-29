@@ -19,6 +19,7 @@ FetchContent_MakeAvailable(googletest)
 
 # include libraries that we need
 include_directories(external/abseil-cpp/)
+include_directories(external)
 include_directories(src/)
 
 # add the subdirectories with stuff to be built

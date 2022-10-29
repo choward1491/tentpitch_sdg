@@ -6,4 +6,5 @@ add_subdirectory(utility)
 
 target_link_libraries(meshing INTERFACE
                       mesh_abstractions
+                      meshing_utility
                       )
