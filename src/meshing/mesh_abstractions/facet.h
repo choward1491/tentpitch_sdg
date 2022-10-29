@@ -26,13 +26,13 @@ class Facet : public OrientedCell {
   FacetHandle GetTwin() const;
   absl::Status SetCofacet(ChamberHandle cofacet);
   absl::StatusOr<ChamberHandle> GetCofacet() const;
-  absl::Status SetCointerstitial(ChamberHandle cointerstitial);
-  ChamberHandle GetCointerstitial() const;
+  absl::Status SetInterstitial(ChamberHandle interstitial);
+  ChamberHandle GetInterstitial() const;
 
  private:
   FacetHandle twin_;
   ChamberHandle cofacet_;
-  ChamberHandle cointerstitial_;
+  ChamberHandle interstitial_;
 };
 
 }
