@@ -42,9 +42,9 @@ class Vertex {
   [[nodiscard]] shared::constants::PrecisionType GetTime() const;
 
   // methods for impacting connectivity of the vertex
-  absl::Status AddIncidentChamber(ChamberHandle ch);
-  absl::Status RemoveIncidentChamber(ChamberHandle ch);
-  [[nodiscard]] absl::StatusOr<const std::set<ChamberHandle>*> GetIncidenceList(int dim_of_chambers) const;
+  void AddIncidentChamber(ChamberHandle ch);
+  void RemoveIncidentChamber(ChamberHandle ch);
+  [[nodiscard]] const std::set<ChamberHandle>& GetIncidenceList(int dim_of_chambers) const;
 
   // clean up methods
   void reset();

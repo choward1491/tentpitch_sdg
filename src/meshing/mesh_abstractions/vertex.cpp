@@ -23,40 +23,24 @@ void Vertex::SetCoordinate(int idx, shared::constants::PrecisionType coordinate_
 }
 shared::constants::PrecisionType Vertex::GetCoordinate(int idx) const {
   ABSL_ASSERT(spatial_dim_ > 0);
-  ABSL_ASSERT(idx < 0 || idx > spatial_dim_);
+  ABSL_ASSERT(idx >= 0 || idx <= spatial_dim_);
   return coordinates_[idx];
 }
 void Vertex::SetTime(shared::constants::PrecisionType time_value) {
-  ABSL_ASSERT(spatial_dim_ > 0);
-  coordinates_[spatial_dim_] = time_value;
+  SetCoordinate(spatial_dim_, time_value);
 }
 shared::constants::PrecisionType Vertex::GetTime() const {
-  ABSL_ASSERT(spatial_dim_ > 0);
-  return coordinates_[spatial_dim_];
+  return GetCoordinate(spatial_dim_);
 }
-absl::Status Vertex::AddIncidentChamber(ChamberHandle ch) {
+void Vertex::AddIncidentChamber(ChamberHandle ch) {
   ABSL_ASSERT(spatial_dim_ > 0);
-  int dim = ch->GetDimension();
-  if (dim > kMaxChamberDim || dim < 0) {
-    return absl::InvalidArgumentError("Input chamber has an invalid dimension");
-  }
-  if ( ch.IsNull() ){
-    return absl::InvalidArgumentError("Input chamber reference is null");
-  }
-  incidence_lists_[dim].insert(ch);
-  return absl::OkStatus();
+  ABSL_ASSERT(ch.IsNotNull());
+  incidence_lists_[ch->GetDimension()].insert(ch);
 }
-absl::Status Vertex::RemoveIncidentChamber(ChamberHandle ch) {
-  ABSL_ASSERT(spatial_dim_ > 1);
-  int dim = ch->GetDimension();
-  if (dim > kMaxChamberDim || dim < 0) {
-    return absl::InvalidArgumentError("Input chamber has an invalid dimension");
-  }
-  if ( ch.IsNull() ){
-    return absl::InvalidArgumentError("Input chamber reference is null");
-  }
-  incidence_lists_[dim].erase(ch);
-  return absl::OkStatus();
+void Vertex::RemoveIncidentChamber(ChamberHandle ch) {
+  ABSL_ASSERT(spatial_dim_ > 0);
+  ABSL_ASSERT(ch.IsNotNull());
+  incidence_lists_[ch->GetDimension()].erase(ch);
 }
 tp_sdg::shared::constants::IdType &Vertex::front_id() {
   return id_pack_.front_id;
@@ -88,12 +72,10 @@ void Vertex::SetCoordinates(std::initializer_list<shared::constants::PrecisionTy
     SetCoordinate(idx++, coordinate);
   }
 }
-absl::StatusOr<const std::set<ChamberHandle>*> Vertex::GetIncidenceList(int dim_of_chambers) const {
+const std::set<ChamberHandle>& Vertex::GetIncidenceList(int dim_of_chambers) const {
   ABSL_ASSERT(spatial_dim_ > 0);
-  if (dim_of_chambers > kMaxChamberDim || dim_of_chambers < 0) {
-    return absl::InvalidArgumentError("Input chamber has an invalid dimension");
-  }
-  return &incidence_lists_[dim_of_chambers];
+  ABSL_ASSERT(dim_of_chambers <= kMaxChamberDim && dim_of_chambers >= 0);
+  return incidence_lists_[dim_of_chambers];
 }
 
 }
