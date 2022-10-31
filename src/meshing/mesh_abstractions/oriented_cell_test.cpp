@@ -29,7 +29,6 @@ TEST_F(CellConstructionTests, InvalidInitializedDimension) {
         int dim = cell.GetDimension();
       }, "Assertion failed");
 }
-}
 TEST_F(CellConstructionTests, InvalidNegativeSetDimension) {
   EXPECT_DEATH(
       {
@@ -285,4 +284,5 @@ TEST_F(CellConstructionTests, TestSuccessfulReset) {
   }
 }
 
+}
 }

@@ -8,10 +8,12 @@
 namespace tp_sdg::meshing::abstractions {
 template<int d>
 void Vertex::SetCoordinates(const std::array<shared::constants::PrecisionType, d + 1> &spacetime_coords) {
-  static_assert(d > kMaxVertexSpatialDimensions || d < 1, "Invalid spacetime coordinate list");
-  spatial_dim_ = d;
+  static_assert(d <= kMaxVertexSpatialDimensions && d >= 1, "Invalid spacetime coordinate list");
+  SetSpatialDimension(d);
   coordinates_.fill(0.0);
-  std::memcpy(coordinates_.data(), spacetime_coords.data(), (d + 1) * sizeof(shared::constants::PrecisionType));
+  for(int i = 0; i <= d; ++i){
+    SetCoordinate(i, spacetime_coords[i]);
+  }
 }
 }
 

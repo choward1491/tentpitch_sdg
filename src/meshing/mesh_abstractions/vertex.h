@@ -9,6 +9,7 @@
 #include <set>
 
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 
 #include "meshing/mesh_abstractions/chamber.fwd.h"
 #include "meshing/mesh_abstractions/constants.h"
@@ -29,18 +30,21 @@ class Vertex {
 
   // methods for setting coordinates and dimension
   void SetSpatialDimension(int vertex_dimension);
-  [[nodiscard]] int GetSpatialDimension() const;
   void SetCoordinate(int idx, shared::constants::PrecisionType coordinate_value);
-  [[nodiscard]] shared::constants::PrecisionType GetCoordinate(int idx) const;
+  void SetCoordinates(std::initializer_list<shared::constants::PrecisionType> coordinates);
   void SetTime(shared::constants::PrecisionType time_value);
-  [[nodiscard]] shared::constants::PrecisionType GetTime() const;
 
   template<int d>
   void SetCoordinates(const std::array<shared::constants::PrecisionType, d + 1> &spacetime_coords);
 
+  [[nodiscard]] int GetSpatialDimension() const;
+  [[nodiscard]] shared::constants::PrecisionType GetCoordinate(int idx) const;
+  [[nodiscard]] shared::constants::PrecisionType GetTime() const;
+
   // methods for impacting connectivity of the vertex
   absl::Status AddIncidentChamber(ChamberHandle ch);
   absl::Status RemoveIncidentChamber(ChamberHandle ch);
+  [[nodiscard]] absl::StatusOr<const std::set<ChamberHandle>*> GetIncidenceList(int dim_of_chambers) const;
 
   // clean up methods
   void reset();
