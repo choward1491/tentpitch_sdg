@@ -245,5 +245,44 @@ TEST_F(CellConstructionTests, FailSetVerticesArrayCollection) {
   EXPECT_EQ(status.code(), absl::StatusCode::kInvalidArgument);
   EXPECT_THAT(status.message(), ::testing::HasSubstr("Vertex handle is null"));
 }
+TEST_F(CellConstructionTests, TestSuccessfulReset) {
+  constexpr int kDimension = 3;
+  std::array<Vertex, kDimension + 1> vertices;
+  std::array<VertexHandle, kDimension + 1> vertex_handles;
+  for (int i = 0; i <= kDimension; ++i) {
+    vertex_handles[i] = VertexHandle(&vertices[i]);
+  }
+
+  // build the exact cell we will compare against
+  OrientedCell exact_cell;
+
+  // build a new cell using the SetVertices method
+  OrientedCell new_cell;
+  EXPECT_OK(new_cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]}));
+  ASSERT_EQ(new_cell.GetDimension(), kDimension);
+  for (int i = 0; i <= kDimension; ++i) {
+    EXPECT_EQ(new_cell.GetVertex(i), vertex_handles[i]) << absl::Substitute("Vertex mismatch at index $0", i);
+  }
+
+  // now reset the new cell
+  new_cell.reset();
+
+  // compare to the dimensions first
+  ASSERT_DEATH(
+      {
+        int dim = exact_cell.GetDimension();
+      }, "Assertion failed");
+  ASSERT_DEATH(
+      {
+        int dim = new_cell.GetDimension();
+      }, "Assertion failed");
+  exact_cell.SetDimension(4);
+  new_cell.SetDimension(4);
+
+  // compare the vertices
+  for (int i = 0; i <= 4; ++i) {
+    EXPECT_EQ(exact_cell.GetVertex(i), new_cell.GetVertex(i)) << absl::Substitute("Difference for vertex($0)", i);
+  }
+}
 
 }
