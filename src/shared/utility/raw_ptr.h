@@ -24,6 +24,10 @@ class RawPtr {
     internal_ptr_ = r_ptr.internal_ptr_;
     return *this;
   }
+  RawPtr &operator=(RawPtr &&r_ptr) {
+    internal_ptr_ = r_ptr.internal_ptr_;
+    return *this;
+  }
   bool operator==(const RawPtr &r) const { return (internal_ptr_ == r.internal_ptr_); }
   bool operator!=(const RawPtr &r) const { return (internal_ptr_ != r.internal_ptr_); }
   bool operator!=(std::nullptr_t) const { return (internal_ptr_ != nullptr); }

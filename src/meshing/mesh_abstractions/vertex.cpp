@@ -10,19 +10,14 @@ namespace tp_sdg::meshing::abstractions {
 Vertex::Vertex() : spatial_dim_(-1) {
   coordinates_.fill(0.0);
 }
-absl::Status Vertex::SetCoordinate(int idx, shared::constants::PrecisionType coordinate_value) {
+void Vertex::SetCoordinate(int idx, shared::constants::PrecisionType coordinate_value) {
   ABSL_ASSERT(spatial_dim_ > 1);
-  if (idx < 0 || idx > spatial_dim_) {
-    return absl::InvalidArgumentError("Index out of bounds");
-  }
+  ABSL_ASSERT(idx < 0 || idx > spatial_dim_);
   coordinates_[idx] = coordinate_value;
-  return absl::OkStatus();
 }
-absl::StatusOr<shared::constants::PrecisionType> Vertex::GetCoordinate(int idx) const {
+shared::constants::PrecisionType Vertex::GetCoordinate(int idx) const {
   ABSL_ASSERT(spatial_dim_ > 1);
-  if (idx < 0 || idx > spatial_dim_) {
-    return absl::InvalidArgumentError("Index out of bounds");
-  }
+  ABSL_ASSERT(idx < 0 || idx > spatial_dim_);
   return coordinates_[idx];
 }
 void Vertex::SetTime(shared::constants::PrecisionType time_value) {
@@ -39,6 +34,9 @@ absl::Status Vertex::AddIncidentChamber(ChamberHandle ch) {
   if (dim > kMaxChamberDim || dim < 0) {
     return absl::InvalidArgumentError("Input chamber has an invalid dimension");
   }
+  if ( ch.IsNull() ){
+    return absl::InvalidArgumentError("Input chamber reference is null");
+  }
   incidence_lists_[dim].insert(ch);
   return absl::OkStatus();
 }
@@ -47,6 +45,9 @@ absl::Status Vertex::RemoveIncidentChamber(ChamberHandle ch) {
   int dim = ch->GetDimension();
   if (dim > kMaxChamberDim || dim < 0) {
     return absl::InvalidArgumentError("Input chamber has an invalid dimension");
+  }
+  if ( ch.IsNull() ){
+    return absl::InvalidArgumentError("Input chamber reference is null");
   }
   incidence_lists_[dim].erase(ch);
   return absl::OkStatus();
@@ -66,12 +67,9 @@ void Vertex::reset() {
   coordinates_.fill(0.0);
   for(auto& set: incidence_lists_){ set.clear(); }
 }
-absl::Status Vertex::SetSpatialDimension(int vertex_dimension) {
-  if( vertex_dimension > kMaxVertexSpatialDimensions || vertex_dimension < 1) {
-    return absl::InvalidArgumentError("Invalid vertex dimension");
-  }
+void Vertex::SetSpatialDimension(int vertex_dimension) {
+  ABSL_ASSERT( vertex_dimension > kMaxVertexSpatialDimensions || vertex_dimension < 1);
   spatial_dim_ = vertex_dimension;
-  return absl::OkStatus();
 }
 int Vertex::GetSpatialDimension() const {
   return spatial_dim_;

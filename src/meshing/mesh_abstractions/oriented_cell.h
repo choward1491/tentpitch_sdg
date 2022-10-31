@@ -7,7 +7,6 @@
 #include <array>
 
 #include "absl/status/status.h"
-#include "absl/status/statusor.h"
 
 #include "meshing/mesh_abstractions/constants.h"
 #include "meshing/mesh_abstractions/vertex.fwd.h"
@@ -20,18 +19,24 @@ class OrientedCell {
   OrientedCell();
   ~OrientedCell() = default;
 
-  absl::Status SetDimension(int dimension);
-  int GetDimension() const;
-  absl::Status SetVertices(std::initializer_list<VertexHandle> list);
+  void SetDimension(int dimension);
   absl::Status SetVertex(int idx, VertexHandle vh);
-  absl::StatusOr<VertexHandle> GetVertex(int idx) const;
+  absl::Status SetVertices(std::initializer_list<VertexHandle> list);
+  template<int d>
+  absl::Status SetVertices(const std::array<VertexHandle, d+1>& vertices);
+
+  [[nodiscard]] int GetDimension() const;
+  [[nodiscard]] VertexHandle GetVertex(int idx) const;
+
+  void reset();
 
  private:
   int dimension_;
   std::array<VertexHandle, kMaxChamberVertices> vertices_;
 };
 
-};
+}
 
+#include "meshing/mesh_abstractions/oriented_cell.inc.h"
 
 #endif //TENTPITCH_SDG_SRC_MESHING_MESH_ABSTRACTIONS_ORIENTED_CELL_H_
