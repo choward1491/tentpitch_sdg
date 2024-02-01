@@ -17,20 +17,21 @@ namespace tp_sdg::meshing::abstractions {
 class OrientedCell {
  public:
   OrientedCell();
-  ~OrientedCell() = default;
+  ~OrientedCell();
 
   void SetDimension(int dimension);
-  absl::Status SetVertex(int idx, VertexHandle vh);
-  absl::Status SetVertices(std::initializer_list<VertexHandle> list);
+  void SetVertex(int idx, VertexHandle vh);
+  void SetVertices(std::initializer_list<VertexHandle> list);
   template<int d>
-  absl::Status SetVertices(const std::array<VertexHandle, d+1>& vertices);
+  void SetVertices(const std::array<VertexHandle, d+1>& vertices);
 
   [[nodiscard]] int GetDimension() const;
   [[nodiscard]] VertexHandle GetVertex(int idx) const;
 
-  void reset();
+  void Reset();
 
  private:
+
   int dimension_;
   std::array<VertexHandle, kMaxChamberVertices> vertices_;
 };

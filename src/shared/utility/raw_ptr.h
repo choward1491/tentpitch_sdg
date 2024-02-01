@@ -11,9 +11,13 @@ namespace tp_sdg::shared::util {
 template<typename T>
 class RawPtr {
  public:
-  RawPtr(T *ptr = nullptr) : internal_ptr_(ptr) {}
+  RawPtr(): internal_ptr_(nullptr){}
+  explicit RawPtr(T *ptr) : internal_ptr_(ptr) {}
   RawPtr(RawPtr &r_ptr) {
     internal_ptr_ = r_ptr.internal_ptr_;
+  }
+  RawPtr(const RawPtr<T>& raw_ptr):internal_ptr_(raw_ptr.internal_ptr_) {
+
   }
   ~RawPtr() = default;
   RawPtr &operator=(T *ptr) {
@@ -21,10 +25,11 @@ class RawPtr {
     return *this;
   }
   RawPtr &operator=(const RawPtr &r_ptr) {
-    internal_ptr_ = r_ptr.internal_ptr_;
+    if(this != &r_ptr)
+      internal_ptr_ = r_ptr.internal_ptr_;
     return *this;
   }
-  RawPtr &operator=(RawPtr &&r_ptr) {
+  RawPtr &operator=(RawPtr &&r_ptr) noexcept {
     internal_ptr_ = r_ptr.internal_ptr_;
     return *this;
   }

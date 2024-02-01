@@ -18,7 +18,7 @@ namespace {
 class OrientedCellTest : public ::testing::Test {
  public:
   OrientedCellTest() = default;
-  ~OrientedCellTest() = default;
+  ~OrientedCellTest() override = default;
 };
 
 using CellConstructionTests = OrientedCellTest;
@@ -64,8 +64,7 @@ TEST_F(CellConstructionTests, FailSetVertex) {
         VertexHandle vh(&v);
         OrientedCell cell;
         cell.SetDimension(0);
-        auto status = cell.SetVertex(1, vh);
-        if (!status.ok()) { exit(1); }
+        cell.SetVertex(1, vh);
         exit(0);
       }, "Assertion failed");
 }
@@ -76,8 +75,7 @@ TEST_F(CellConstructionTests, SucceedSetVertex) {
         VertexHandle vh(&v);
         OrientedCell cell;
         cell.SetDimension(0);
-        auto status = cell.SetVertex(0, vh);
-        if (!status.ok()) { exit(1); }
+        cell.SetVertex(0, vh);
         exit(0);
       }, ::testing::ExitedWithCode(0), "");
 }
@@ -88,8 +86,7 @@ TEST_F(CellConstructionTests, FailGetVertex) {
         VertexHandle vh(&v);
         OrientedCell cell;
         cell.SetDimension(0);
-        auto status = cell.SetVertex(0, vh);
-        if (!status.ok()) { exit(1); }
+        cell.SetVertex(0, vh);
         VertexHandle vh_new = cell.GetVertex(1);
         exit(0);
       }, "Assertion failed");
@@ -101,8 +98,7 @@ TEST_F(CellConstructionTests, SucceedGetVertex) {
         VertexHandle vh(&v);
         OrientedCell cell;
         cell.SetDimension(0);
-        auto status = cell.SetVertex(0, vh);
-        if (!status.ok()) { exit(1); }
+        cell.SetVertex(0, vh);
         VertexHandle vh_new = cell.GetVertex(0);
         exit(0);
       }, ::testing::ExitedWithCode(0), "");
@@ -119,7 +115,7 @@ TEST_F(CellConstructionTests, SucceedSetVerticesIndividual) {
   OrientedCell cell;
   cell.SetDimension(kDimension);
   for (int i = 0; i <= kDimension; ++i) {
-    EXPECT_OK(cell.SetVertex(i, vertex_handles[i]));
+    cell.SetVertex(i, vertex_handles[i]);
   }
 
   // compare the vertices
@@ -140,12 +136,12 @@ TEST_F(CellConstructionTests, SucceedSetVerticesInitListCollection) {
   OrientedCell exact_cell;
   exact_cell.SetDimension(kDimension);
   for (int i = 0; i <= kDimension; ++i) {
-    EXPECT_OK(exact_cell.SetVertex(i, vertex_handles[i]));
+    exact_cell.SetVertex(i, vertex_handles[i]);
   }
 
   // build a new cell using the SetVertices method
   OrientedCell new_cell;
-  EXPECT_OK(new_cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]}));
+  new_cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]});
 
   // compare the vertices
   EXPECT_EQ(new_cell.GetDimension(), exact_cell.GetDimension());
@@ -165,12 +161,12 @@ TEST_F(CellConstructionTests, SucceedSetVerticesArrayCollection) {
   OrientedCell exact_cell;
   exact_cell.SetDimension(kDimension);
   for (int i = 0; i <= kDimension; ++i) {
-    EXPECT_OK(exact_cell.SetVertex(i, vertex_handles[i]));
+    exact_cell.SetVertex(i, vertex_handles[i]);
   }
 
   // build a new cell using the SetVertices method
   OrientedCell new_cell;
-  EXPECT_OK(new_cell.SetVertices<kDimension>(vertex_handles));
+  new_cell.SetVertices<kDimension>(vertex_handles);
 
   // compare the vertices
   EXPECT_EQ(new_cell.GetDimension(), exact_cell.GetDimension());
@@ -194,12 +190,18 @@ TEST_F(CellConstructionTests, FailSetVerticesIndividual) {
   cell.SetDimension(kDimension);
   for (int i = 0; i <= kDimension; ++i) {
     if (i == bad_idx) {
-      absl::Status status = cell.SetVertex(i, vertex_handles[i]);
-      EXPECT_FALSE(status.ok());
-      EXPECT_EQ(status.code(), absl::StatusCode::kInvalidArgument);
-      EXPECT_THAT(status.message(), ::testing::HasSubstr("Vertex handle is null"));
+      EXPECT_DEATH(
+          {
+            cell.SetVertex(i, vertex_handles[i]);
+            exit(0);
+          }, "Assertion failed");
     } else {
-      EXPECT_OK(cell.SetVertex(i, vertex_handles[i]));
+      cell.SetVertex(i, vertex_handles[i]);
+      EXPECT_EXIT(
+          {
+            cell.SetVertex(i, vertex_handles[i]);
+            exit(0);
+          }, ::testing::ExitedWithCode(0), "");
     }
   }
 
@@ -220,12 +222,12 @@ TEST_F(CellConstructionTests, FailSetVerticesInitListCollection) {
   vertex_handles[bad_idx] = nullptr;
 
   // build a new cell using the SetVertices method
-  OrientedCell cell;
-  absl::Status status = cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]});
-  EXPECT_FALSE(status.ok());
-  EXPECT_EQ(status.code(), absl::StatusCode::kInvalidArgument);
-  EXPECT_THAT(status.message(), ::testing::HasSubstr("Vertex handle is null"));
-
+  EXPECT_DEATH(
+      {
+        OrientedCell cell;
+        cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]});
+        exit(0);
+      }, "Assertion failed");
 }
 TEST_F(CellConstructionTests, FailSetVerticesArrayCollection) {
   constexpr int kDimension = 3;
@@ -238,11 +240,12 @@ TEST_F(CellConstructionTests, FailSetVerticesArrayCollection) {
   vertex_handles[bad_idx] = nullptr;
 
   // build a new cell using the SetVertices method
-  OrientedCell cell;
-  absl::Status status = cell.SetVertices<kDimension>(vertex_handles);
-  EXPECT_FALSE(status.ok());
-  EXPECT_EQ(status.code(), absl::StatusCode::kInvalidArgument);
-  EXPECT_THAT(status.message(), ::testing::HasSubstr("Vertex handle is null"));
+  EXPECT_DEATH(
+      {
+        OrientedCell cell;
+        cell.SetVertices<kDimension>(vertex_handles);
+        exit(0);
+      }, "Assertion failed");
 }
 TEST_F(CellConstructionTests, TestSuccessfulReset) {
   constexpr int kDimension = 3;
@@ -257,14 +260,14 @@ TEST_F(CellConstructionTests, TestSuccessfulReset) {
 
   // build a new cell using the SetVertices method
   OrientedCell new_cell;
-  EXPECT_OK(new_cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]}));
+  new_cell.SetVertices({vertex_handles[0], vertex_handles[1], vertex_handles[2], vertex_handles[3]});
   ASSERT_EQ(new_cell.GetDimension(), kDimension);
   for (int i = 0; i <= kDimension; ++i) {
     EXPECT_EQ(new_cell.GetVertex(i), vertex_handles[i]) << absl::Substitute("Vertex mismatch at index $0", i);
   }
 
   // now reset the new cell
-  new_cell.reset();
+  new_cell.Reset();
 
   // compare to the dimensions first
   ASSERT_DEATH(

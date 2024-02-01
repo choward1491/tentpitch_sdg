@@ -6,17 +6,18 @@
 
 #include "oriented_cell.h"
 
+#include "absl/status/status.h"
+
 namespace tp_sdg::meshing::abstractions {
 
 template<int d>
-absl::Status OrientedCell::SetVertices(const std::array<VertexHandle, d + 1> &vertices) {
+void OrientedCell::SetVertices(const std::array<VertexHandle, d + 1> &vertices) {
   static_assert(d >= 0 && d <= kMaxChamberDim);
   for(int i = 0; i <= d; ++i){
-    if (vertices[i].IsNull()) { return absl::InvalidArgumentError("Vertex handle is null"); }
+    ABSL_ASSERT(vertices[i].IsNotNull());
     vertices_[i] = vertices[i];
   }
   dimension_ = d;
-  return absl::OkStatus();
 }
 
 }

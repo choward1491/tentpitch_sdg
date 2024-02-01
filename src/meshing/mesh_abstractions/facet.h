@@ -15,26 +15,31 @@
 #include "meshing/mesh_abstractions/oriented_cell.h"
 #include "meshing/mesh_abstractions/vertex.fwd.h"
 
-namespace tp_sdg::meshing::abstractions {
+namespace tp_sdg {
+namespace meshing {
+namespace abstractions {
 
 class Facet : public OrientedCell {
  public:
   Facet() = default;
   ~Facet() = default;
 
-  absl::Status SetTwin(FacetHandle twin);
-  FacetHandle GetTwin() const;
-  absl::Status SetCofacet(ChamberHandle cofacet);
-  absl::StatusOr<ChamberHandle> GetCofacet() const;
-  absl::Status SetInterstitial(ChamberHandle interstitial);
-  ChamberHandle GetInterstitial() const;
+  void SetTwin(FacetHandle twin);
+  [[nodiscard]] FacetHandle GetTwin() const;
+  void SetCofacet(ChamberHandle cofacet);
+  [[nodiscard]] ChamberHandle GetCofacet() const;
+  void SetInterstitial(ChamberHandle interstitial);
+  [[nodiscard]] ChamberHandle GetInterstitial() const;
 
  private:
+
   FacetHandle twin_;
   ChamberHandle cofacet_;
   ChamberHandle interstitial_;
 };
 
+}
+}
 }
 
 #endif //TENTPITCH_SDG_SRC_MESHING_MESH_ABSTRACTIONS_FACET_H_
