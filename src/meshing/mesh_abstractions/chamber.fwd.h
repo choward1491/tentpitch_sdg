@@ -9,6 +9,7 @@
 namespace tp_sdg::meshing::abstractions {
 class Chamber;
 using ChamberHandle = shared::util::RawPtr<Chamber>;
+const FacetHandle kNullChamberHandle = FacetHandle(nullptr);
 }
 
 #endif //TENTPITCH_SDG_SRC_MESHING_MESH_ABSTRACTIONS_CHAMBER_FWD_H_

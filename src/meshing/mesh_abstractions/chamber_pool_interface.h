@@ -15,13 +15,21 @@
 namespace tp_sdg::meshing::abstractions {
 using IdType = ::tp_sdg::shared::constants::IdType;
 
+
 class ChamberPoolInterface {
  public:
   virtual ~ChamberPoolInterface() = default;
+  void SetDimensionForChambers(int d) { chamber_dim_ = d; }
+  int GetDimensionForChambers() const { return chamber_dim_; }
+
+  // Create new chamber that is not in the wild with a distinct ID and its dimension set.
   [[nodiscard]] virtual ChamberHandle GetNewChamber() = 0;
   [[nodiscard]] virtual absl::Status RemoveChamberWithId(::tp_sdg::shared::constants::IdType id) = 0;
   [[nodiscard]] virtual absl::StatusOr<ChamberHandle> GetChamber(::tp_sdg::shared::constants::IdType id) const = 0;
   [[nodiscard]] virtual std::size_t NumChambers() const = 0;
+
+ private:
+  int chamber_dim_;
 };
 
 }

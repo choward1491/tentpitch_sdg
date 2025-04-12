@@ -23,6 +23,7 @@ class Chamber : public OrientedCell {
 
   void SetFacet(int idx, FacetHandle facet);
   [[nodiscard]] FacetHandle GetFacet(int idx) const;
+  int GetNumFacets() const;
   void SetCointerstitial(FacetHandle cointerstitial);
   [[nodiscard]] FacetHandle GetCointerstitial() const;
 

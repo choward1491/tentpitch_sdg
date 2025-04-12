@@ -24,10 +24,11 @@ class OrientedMesh {
  public:
   struct Input {
     int dimension;
+    int vertex_dimension;
     std::unique_ptr<FacetPoolInterface> facet_pool;
     std::unique_ptr<ChamberPoolInterface> chamber_pool;
   };
-  [[nodiscard]] static absl::StatusOr<std::unique_ptr<OrientedMesh>> Create(Input input);
+  [[nodiscard]] static absl::StatusOr<std::unique_ptr<OrientedMesh>> Create(Input& input);
 
   // ctors/dtors
   OrientedMesh() = delete;
@@ -60,8 +61,8 @@ class OrientedMesh {
   [[nodiscard]] absl::Status DeleteChamberWithId(::tp_sdg::shared::constants::IdType id);
 
   // Adds a new chamber, constructed with new facets, all based on the passed in vertices.
-  [[nodiscard]] ChamberHandle AddChamberWithFacetsBasedOnVertices(std::initializer_list<VertexHandle> vertices);
-  [[nodiscard]] ChamberHandle AddChamberWithFacetsBasedOnVertices(VertexHandle *vertices, int num_vertices);
+  [[nodiscard]] absl::StatusOr<ChamberHandle> AddChamberWithFacetsBasedOnVertices(std::initializer_list<VertexHandle> vertices);
+  [[nodiscard]] absl::StatusOr<ChamberHandle> AddChamberWithFacetsBasedOnVertices(VertexHandle *vertices, int num_vertices);
 
   // Deletes a chamber, along with all its corresponding facets, given they all exist and live within this mesh.
   // If a chamber or its facets do not exist, returns error. *An error should not occur*
@@ -73,10 +74,10 @@ class OrientedMesh {
   std::size_t NumChambers() const;
 
   // Adds a facet without any added connectivity information to vertices or cofacets.
-  [[nodiscard]] ChamberHandle AddFacet();
+  [[nodiscard]] FacetHandle AddFacet();
 
   // Grabs a facet baed on its unique ID.
-  [[nodiscard]] absl::StatusOr<ChamberHandle> GetFacet(::tp_sdg::shared::constants::IdType id) const;
+  [[nodiscard]] absl::StatusOr<FacetHandle> GetFacet(::tp_sdg::shared::constants::IdType id) const;
 
   // Deletes a facet based on its unique ID. If it cannot be found, then an error returns. *This should not happen*
   [[nodiscard]] absl::Status DeleteFacetWithId(::tp_sdg::shared::constants::IdType id);
@@ -84,6 +85,17 @@ class OrientedMesh {
   std::size_t NumFacets() const;
 
  private:
+  OrientedMesh(Input& input);
+  [[nodiscard]] absl::StatusOr<ChamberHandle> BuildChamberWithFacetsUsingTemporaryStructures();
+  static void FindAndSetupTwin(FacetHandle fh);
+
+  int dimension_;
+  int vertex_dimension_;
+  std::unique_ptr<FacetPoolInterface> facet_pool_;
+  std::unique_ptr<ChamberPoolInterface> chamber_pool_;
+  std::vector<VertexHandle> tmp_chamber_vertices_;
+  std::array<std::vector<VertexHandle>, 5> tmp_all_facet_vertices_;
+
 };
 
 }

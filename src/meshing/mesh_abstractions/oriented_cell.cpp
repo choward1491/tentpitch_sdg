@@ -3,6 +3,8 @@
 */
 #include "meshing/mesh_abstractions/oriented_cell.h"
 
+using ::tp_sdg::shared::constants::kInvalidId;
+
 namespace tp_sdg::meshing::abstractions {
 
 OrientedCell::OrientedCell() : dimension_(-1) {
@@ -41,7 +43,16 @@ VertexHandle OrientedCell::GetVertex(int idx) const {
   return vertices_[idx];
 }
 void OrientedCell::Reset() {
+  id_ = kInvalidId;
   dimension_ = -1;
   vertices_.fill(VertexHandle(nullptr));
 }
+void OrientedCell::SetId(::tp_sdg::shared::constants::IdType id) {
+  ABSL_ASSERT(id != kInvalidId);
+  id_ = id;
+}
+::tp_sdg::shared::constants::IdType OrientedCell::GetId() const {
+  return id_;
+}
+
 }

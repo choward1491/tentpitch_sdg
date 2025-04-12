@@ -33,6 +33,10 @@ FacetHandle Chamber::GetCointerstitial() const {
   return cointerstitial_;
 }
 
+int Chamber::GetNumFacets() const {
+  return GetDimension() + 1;
+}
+
 }
 }
 }

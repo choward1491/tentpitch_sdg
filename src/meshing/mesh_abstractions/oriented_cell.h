@@ -10,6 +10,8 @@
 
 #include "meshing/mesh_abstractions/constants.h"
 #include "meshing/mesh_abstractions/vertex.fwd.h"
+#include "meshing/utility/mesh_entity_id_pack.h"
+#include "shared/constants.h"
 #include "shared/utility/raw_ptr.h"
 
 namespace tp_sdg::meshing::abstractions {
@@ -19,6 +21,8 @@ class OrientedCell {
   OrientedCell();
   ~OrientedCell();
 
+  void SetId(::tp_sdg::shared::constants::IdType id);
+  ::tp_sdg::shared::constants::IdType GetId() const;
   void SetDimension(int dimension);
   void SetVertex(int idx, VertexHandle vh);
   void SetVertices(std::initializer_list<VertexHandle> list);
@@ -32,6 +36,7 @@ class OrientedCell {
 
  private:
 
+  ::tp_sdg::shared::constants::IdType id_;
   int dimension_;
   std::array<VertexHandle, kMaxChamberVertices> vertices_;
 };

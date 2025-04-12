@@ -9,6 +9,7 @@
 namespace tp_sdg::meshing::abstractions {
 class Vertex;
 using VertexHandle = shared::util::RawPtr<Vertex>;
+const VertexHandle kNullVertexHandle = VertexHandle(nullptr);
 }
 
 #endif //TENTPITCH_SDG_SRC_MESHING_MESH_ABSTRACTIONS_VERTEX_FWD_H_
