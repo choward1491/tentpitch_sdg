@@ -13,15 +13,19 @@
 #include "shared/constants.h"
 
 namespace tp_sdg::meshing::abstractions {
-using IdType = ::tp_sdg::shared::constants::IdType;
+using ::tp_sdg::shared::constants::IdType;
 
 class VertexPoolInterface {
  public:
   virtual ~VertexPoolInterface() = default;
+  void SetDimensionForFacets(int d) { vertex_dim_ = d; }
+  int GetDimensionForFacets() const { return vertex_dim_; }
   [[nodiscard]] virtual VertexHandle GetNewVertex() = 0;
   [[nodiscard]] virtual absl::Status RemoveVertexWithId(::tp_sdg::shared::constants::IdType id) = 0;
   [[nodiscard]] virtual absl::StatusOr<VertexHandle> GetVertex(::tp_sdg::shared::constants::IdType id) const = 0;
   [[nodiscard]] virtual std::size_t NumVertices() const = 0;
+ private:
+  int vertex_dim_;
 };
 
 }

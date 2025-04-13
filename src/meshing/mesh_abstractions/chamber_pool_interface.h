@@ -13,8 +13,7 @@
 #include "shared/constants.h"
 
 namespace tp_sdg::meshing::abstractions {
-using IdType = ::tp_sdg::shared::constants::IdType;
-
+using ::tp_sdg::shared::constants::IdType;
 
 class ChamberPoolInterface {
  public:
