@@ -37,6 +37,8 @@ class StratifiedMesh {
   StratifiedMesh& operator=(const StratifiedMesh&) = delete;
   ~StratifiedMesh() = default;
 
+  [[nodiscard]] int GetTopDimension() const;
+
   [[nodiscard]] VertexHandle AddVertex() const;
   [[nodiscard]] absl::StatusOr<VertexHandle> GetVertex(tp_sdg::shared::constants::IdType id);
   [[nodiscard]] absl::Status RemoveVertex(tp_sdg::shared::constants::IdType id);
@@ -45,9 +47,12 @@ class StratifiedMesh {
   [[nodiscard]] OMeshHandle GetOrientedMesh(int dim);
   [[nodiscard]] const OMeshHandle GetOrientedMesh(int dim) const;
 
- private:
+ protected:
+  static absl::Status VerifyInputAndBuildMeshes(Input &input,
+                                         std::array<std::unique_ptr<OrientedMesh>, 5>& oriented_meshes);
   explicit StratifiedMesh(Input&, std::array<std::unique_ptr<OrientedMesh>, 5>&);
 
+ private:
   int top_dimension_;
   std::unique_ptr<VertexPoolInterface> vertex_pool_;
   std::array<std::unique_ptr<OrientedMesh>, 5> oriented_meshes_;

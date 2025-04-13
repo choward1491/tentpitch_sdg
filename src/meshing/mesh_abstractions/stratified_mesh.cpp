@@ -14,6 +14,13 @@
 
 namespace tp_sdg::meshing::abstractions {
 absl::StatusOr<std::unique_ptr<StratifiedMesh>> StratifiedMesh::Create(Input &input) {
+  std::array<std::unique_ptr<OrientedMesh>, 5> oriented_meshes;
+  RETURN_IF_ERROR(VerifyInputAndBuildMeshes(input, oriented_meshes));
+  return absl::WrapUnique(new StratifiedMesh(input, oriented_meshes));
+}
+
+absl::Status StratifiedMesh::VerifyInputAndBuildMeshes(Input &input,
+                                                       std::array<std::unique_ptr<OrientedMesh>, 5>& oriented_meshes) {
   if(input.top_dimension < 1 || input.top_dimension > 4) {
     return absl::InvalidArgumentError("Top bound must be in set {1, 2, 3, 4}.");
   }
@@ -22,7 +29,6 @@ absl::StatusOr<std::unique_ptr<StratifiedMesh>> StratifiedMesh::Create(Input &in
   if(not input.vertex_pool) return absl::InvalidArgumentError("Vertex pool is null.");
 
   // Try to build up the oriented meshes and return an error if something goes wrong.
-  std::array<std::unique_ptr<OrientedMesh>, 5> oriented_meshes;
   for(int i = 1; i <= 4; ++i){
     int vertex_dim = i <= input.top_dimension ? input.top_dimension : i;
     OrientedMesh::Input input2{.dimension = i,
@@ -31,7 +37,11 @@ absl::StatusOr<std::unique_ptr<StratifiedMesh>> StratifiedMesh::Create(Input &in
         .chamber_pool = input.chamber_pool_generator->Create()};
     ASSIGN_OR_RETURN(oriented_meshes[i], OrientedMesh::Create(input2));
   }
-  return absl::WrapUnique(new StratifiedMesh(input, oriented_meshes));
+  return absl::OkStatus();
+}
+
+int StratifiedMesh::GetTopDimension() const {
+  return top_dimension_;
 }
 
 VertexHandle StratifiedMesh::AddVertex() const {
