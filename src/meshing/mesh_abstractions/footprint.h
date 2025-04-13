@@ -27,11 +27,13 @@ namespace tp_sdg::meshing::abstractions {
 class Footprint : public StratifiedMesh {
  public:
   struct Input {
-    
+
   };
 
  private:
-  explicit Footprint(Input& input);
+  explicit Footprint(Input &input);
 };
+
+}
 
 #endif //TENTPITCH_SDG_SRC_MESHING_MESH_ABSTRACTIONS_FOOTPRINT_H_
