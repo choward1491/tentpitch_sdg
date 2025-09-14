@@ -1,11 +1,11 @@
-# OpenSpacetime
-## A free to use package for solving hyperbolic PDEs using the spacetime discontinuous galerkin method with tent pitching
+# Solver for systems of hyperbolic partial differential equations (Work in process)
+## A package for solving hyperbolic PDEs using the spacetime discontinuous galerkin method with tent pitching
 The goal of this package is to build a free to use package for solving hyperbolic PDEs, using a spacetime discontinuous approach and the tent pitching technique. This package is based on data structures and algorithms designed in my [masters thesis][1] but makes use of my HPC and software engineering skills picked up over time.
 
-## Features
+## Goals
 - Written in modern C++
 - Handles systems of hyperbolic PDEs.
-	- Currently handles linear PDEs, plan to add in capabilities for nonlinear
+	- Will start with linear PDEs, plan to add in capabilities for nonlinear
 	- Extendable for new problems and boundary conditions.
 - Fast and parallel, if desired.
 	- Tent pitching approach allows for very fast serial solution to solving systems of hyperbolic PDEs
