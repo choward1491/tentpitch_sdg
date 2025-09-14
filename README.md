@@ -19,4 +19,4 @@ The goal of this package is to build a free to use package for solving hyperboli
 - Unit tests for everything.
 
 ## References
-[1]: https://www.ideals.illinois.edu/items/112053 "Masters Thesis on data structures for spacetime discontinuous galerkin method through 3d x time"
+- Howard, Christian. "Spacetime meshing of stratified spaces for spacetime discontinuous Galerkin methods in arbitrary spatial dimensions". [link](https://www.ideals.illinois.edu/items/112053)
